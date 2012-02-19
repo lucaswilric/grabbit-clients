@@ -46,7 +46,7 @@ class TorrentProcessor
   end
   
   def ftp_dir_for_torrent(t)
-    t['downloadDir'].sub(FtpFSRootRegex, '').sub(/\//, '')
+    t['downloadDir'].sub(FtpFSRootRegex, '').sub(/^\//, '')
   end
     
   def ftp_url_for_file(file, dir)
