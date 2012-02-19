@@ -15,5 +15,5 @@
 /tmp
 
 # Ignore files containing passwords... duh...
-/client/*_test.rb
-/client/config.rb
+/test/*_test.rb
+/config.rb

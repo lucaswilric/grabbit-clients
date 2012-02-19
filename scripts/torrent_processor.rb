@@ -1,6 +1,13 @@
 #!/usr/bin/ruby
 
-require './config'
+require 'net/http'
+require './lib/http_fetcher'
+
+require 'rubygems'
+require 'json'
+
+require './config/torrent_processor.config'
+
 require './lib/transmission_helper'
 require './lib/download_job_creator'
 require './lib/download_job_fetcher'

@@ -1,8 +1,14 @@
 #!/usr/bin/ruby
 
 require 'net/ftp'
+require 'net/http'
+require './lib/http_fetcher'
 
-require './config'
+require 'rubygems'
+require 'json'
+
+require './config/grabbit_ftp_client.config'
+
 require './lib/download_job_helper'
 require './lib/download_job_runner'
 require './lib/download_job_fetcher'

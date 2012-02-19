@@ -1,5 +1,10 @@
 #!/usr/bin/ruby
 
+require 'net/http'
+
+require 'rubygems'
+require 'json'
+
 require '../config'
 require '../lib/download_job_fetcher'
 

@@ -1,4 +1,12 @@
-require './http_fetcher'
+
+Status = {
+    :not_started => "Not Started",
+    :in_progress => "In Progress",
+    :finished => "Finished",
+    :failed => "Failed",
+    :retry => "Retry",
+    :cancelled => "Cancelled"
+}
 
 class DownloadJobRunner
   include HttpFetcher

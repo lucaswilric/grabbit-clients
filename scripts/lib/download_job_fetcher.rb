@@ -1,9 +1,3 @@
-require './http_fetcher'
-require 'net/http'
-
-require 'rubygems'
-require 'json'
-
 class DownloadJobFetcher
   include HttpFetcher
   

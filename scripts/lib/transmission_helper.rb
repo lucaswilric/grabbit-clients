@@ -1,8 +1,3 @@
-require 'net/http'
-
-require 'rubygems'
-require 'json'
-
 class TransmissionHelper
   def initialize(config)
     @transmission_url = config['url']

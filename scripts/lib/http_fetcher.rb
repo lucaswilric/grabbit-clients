@@ -1,5 +1,3 @@
-require 'net/http'
-
 class NotFoundError < StandardError
 end
 
