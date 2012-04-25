@@ -40,7 +40,10 @@ DownloadJobRunner.new().run_jobs(jobs.first(5)) do |job, subscription|
   ftp = Net::FTP.new uri.host
   ftp.login
   ftp.chdir directory
-  ftp.get file_name, destination + '/' + file_name
+  
+  # Only download the file if it exists
+  ftp.get file_name, destination + '/' + file_name if ftp.ls(file_name).length > 0  
+
   ftp.close
   
   puts "Downloaded #{job['url']} to #{destination}."
