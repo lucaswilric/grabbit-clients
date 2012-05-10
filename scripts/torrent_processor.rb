@@ -5,6 +5,7 @@ require './lib/http_fetcher'
 
 require 'rubygems'
 require 'json'
+require 'xmpp4r-simple'
 
 require './config/torrent_processor.config'
 
@@ -36,6 +37,10 @@ class TorrentProcessor
         
       if r['success']
         puts "Created job for '#{ftp_url_for_file(file, dir)}'"
+        
+        # Send a Jabber message to say the download is finished.
+        im = Jabber::Simple.new(JabberConfig["id"], JabberConfig["password"])
+        JabberConfig["recipients"].each {|r| im.deliver(r, "#{file} finished downloading.") }
       elsif r['errors'] == {"base" => ["This URL is already waiting to be downloaded"]}
         # Raise unless we get success back, or the error message expected.
         puts "Job for '#{ftp_url_for_file(file, dir)}' already exists"

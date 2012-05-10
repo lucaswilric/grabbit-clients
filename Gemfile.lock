@@ -1,0 +1,19 @@
+GIT
+  remote: git://github.com/blaine/xmpp4r-simple.git
+  revision: 92e2cd0002ec3a9a38506527e1a3a2d622408626
+  specs:
+    xmpp4r-simple (0.8.8)
+      xmpp4r (>= 0.3.2)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    json (1.7.1)
+    xmpp4r (0.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  json
+  xmpp4r-simple!
