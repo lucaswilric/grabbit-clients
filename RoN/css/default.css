@@ -1,0 +1,18 @@
+
+#grid-system { margin-left: 100px; }
+
+.item { margin-bottom: 8px; }
+
+.icon-chevron-right { margin: 3px 3px 0 0; }
+
+#templates { display: none; }
+
+.link-attribution { 
+	float: left; 
+	margin: .6em 0 0 .6em;
+}
+
+h3 { float: left; }
+
+.day-header h2 { color: #aaf; }
+

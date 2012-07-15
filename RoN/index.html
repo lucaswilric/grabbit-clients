@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title></title>
+ <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css" />
+ <link rel="stylesheet" type="text/css" href="css/default.css" />
+ <link rel="openid2.provider" href="https://openid.stackexchange.com/openid/provider">
+ <link rel="openid2.local_id" href="https://openid.stackexchange.com/user/e39add2c-5933-4dd0-8d29-6fff8f20daa8">
+</head>
+<body>
+	<section id="grid-system">
+		<div class="page-header row"><h1 class="span10"></h1><a id="rss-icon" class="span1"><img src="img/feed-icon-28x28.png" /></a></div>
+		<div id="news">
+			<div id="waiting" class="row"><div class="span1 offset5"><img src="img/waiting.gif" /></div></div>
+		</div>
+		<hr style="clear: both;" />
+		<div id="footer">
+			<p>This page is styled after <a href="http://scripting.com/">Dave Winer</a>'s <a href="http://daveriver.scripting.com/">River of News</a>. It's built with <a href="http://jquery.com">jQuery</a> and <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, and gets its data from <a href="http://grabbit.lucasrichter.id.au/">Grabbit</a>.</p>
+		</div>
+	</section>
+	<div id="templates">
+		<div id="item-template" class="item row">
+			<div class="span10 offset1">
+				<h3
+					><img src="" /
+					><span class="icon-chevron-right"></span
+					><a href="#"></a
+				></h3
+				><span class="link-attribution"
+					>from <em></em
+				></span
+			></div>
+		</div>
+		<div id="date-header-template" class="day-header row">
+			<h2 class="offset1"></h2>
+		</div>
+		<div id="message-template" class="ron-message row">
+			<h2 class="offset1"></h2>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+	$(function(){
+    SubdomainSettingsMap = {
+      'reading': {title: "Lucas's Reading List", showSubscription: true},
+      'links': {title: "Lucas's Linkblog", showSubscription: false},
+      'grabbit': {title: "Grabbit", showSubscription: true}
+    };
+	  window.RoN = {
+	  months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+	  dateHeading: '',
+	  tag: '',
+		sourceURL: 'http://grabbit.lucasrichter.id.au/download_jobs/tagged/{TAG}/feed',
+		maxItemsToDisplay: 100,
+		subscriptions: [],
+		displayMessage: function(message) {
+			var mt = $('#message-template').clone(
+				).attr('id', 'ron-message_' + $('#news .ron-message').length);
+			mt.find('h2').text(message);
+			mt.prependTo('#news');
+		},
+		addItems: function(items) {
+			$('#waiting').remove();
+			
+			if (items.length == 0) {
+				RoN.displayMessage("No items to display.");
+				return;
+			}
+			
+			$.each(items.reverse(), function() {
+		    if ($('#ronItem_' + this.id).length) return;
+						    
+		    var d = new Date(this.created_at);
+		    var newDateHeading = d.getDate() + ' ' + RoN.months[d.getMonth()];
+		    
+		    if (RoN.dateHeading.indexOf(newDateHeading) != 0) {
+		    	RoN.insertDateHeader();
+					RoN.dateHeading = newDateHeading;
+				}
+				
+		    newItem = $('#item-template').clone().attr('id', 'ronItem_'+this.id);
+		    RoN.fillTemplate(newItem, this);
+			  newItem.prependTo('#news');
+			});
+			RoN.insertDateHeader();
+		},
+		insertDateHeader: function() {
+			if (RoN.dateHeading == '') return;
+		
+			var header = $('#date-header-template').clone().attr('id', null);
+			header.find('h2').text(RoN.dateHeading);
+			header.prependTo('#news');		
+		},
+		fillTemplate: function(item, data) {
+			  item.find('h3 a'
+			    ).attr('href', data.url
+			    ).attr('title', data.title
+			    ).attr('target', '_blank'
+			    ).text(data.title);
+			  var domain = data.url.match(/:\/\/([^\/]+)/)[1];
+			  item.find('img'
+			  	).attr('src', 'http://www.google.com/s2/favicons?domain='+domain);
+
+			  if (SubdomainSettingsMap[RoN.tag].showSubscription)
+					item.find('.link-attribution em'
+						).text(RoN.subscriptions[data.subscription_id].title); 
+				else
+					item.find('.link-attribution').remove();
+		},
+		getNewItems: function() {
+		  console.log('Getting new items...');
+		  $.ajax({
+			url: RoN.sourceURL.replace('{TAG}', RoN.tag),
+			success: this.addItems,
+			failure: function() { this.displayMessage('There was a problem getting the links.'); },
+			dataType: 'json'
+		  });
+		  console.log('Done getting new items.');
+		},
+		removeOldItems: function() {},
+		getSubscriptions: function() {
+			$.ajax({
+			url: 'http://grabbit.lucasrichter.id.au/subscriptions/tagged/{TAG}.json'.replace('{TAG}', RoN.tag),
+			success: function(data) { $.each(data, function() {
+				RoN.subscriptions[this.id] = this;
+			}) },
+			dataType: 'json'
+		  });
+		},
+    startEverything: function() {
+      var t = location.href.match(/:\/\/([^\.])+[\.\/]/)[0];
+		  this.tag = t.substr(3,t.length-4);
+      $('.page-header h1').text(SubdomainSettingsMap[this.tag].title);
+      $('#rss-icon').attr('href', 'download_jobs/tagged/'+this.tag+'/feed.rss');
+      document.title = SubdomainSettingsMap[this.tag].title;
+      this.getSubscriptions();
+      this.getNewItems();
+    }
+	  };
+	  document.domain = 'lucasrichter.id.au';
+	  RoN.startEverything();
+	});
+	</script>
+</body>
+</html>
